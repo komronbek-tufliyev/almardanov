@@ -1,4 +1,4 @@
-from .models import Answer, Quiz
+from .models import Answer, Quiz, Question, Category
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 

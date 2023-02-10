@@ -86,7 +86,7 @@ DATABASES = {
     #     'ENGINE': 'django.db.backends.sqlite3',
     #     'NAME': BASE_DIR / 'db.sqlite3',
     # }
-    'default': env.dj_db_url('DATABASE_URL')
+    'default': env.dj_db_url('DATABASE_URL', default='sqlite:///db.sqlite3')
 }
 
 
@@ -143,4 +143,6 @@ REST_FRAMEWORK = {
     ]
 }
 
+
+AUTH_USER_MODEL = 'users.CustomUser'
 
