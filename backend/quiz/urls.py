@@ -1,31 +1,44 @@
 from django.urls import path
 from .views import (
-    QuizViewSet,
-    QuestionViewSet,
-    CategoryViewSet,
-    AnswerViewSet,
-    UserAnswerViewSet,
-    # UserViewSet,
-    UserQuizViewSet,
+    QuizListView,
+    QuizDetailView,
+    QuestionListView,
+    QuestionDetailView,
+    AnswerListView,
+    GetQuiz,
+    GetQuizes,
+    GetCategories,
+    GetQuestions,
+    ShowResult,
+    GetQuizByCategory,
+    GetAnswersByQuestion,
+    GetQuizesByCategory,
 )
-    # QuizQuestionViewSet,
+
 
 urlpatterns = [
-    path('quiz/', QuizViewSet.as_view({'get': 'list', 'post': 'create'})),
-    path('quiz/<int:pk>/', QuizViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
-    path('question/', QuestionViewSet.as_view({'get': 'list', 'post': 'create'})),
-    path('question/<int:pk>/', QuestionViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
-    path('category/', CategoryViewSet.as_view({'get': 'list', 'post': 'create'})),
-    path('category/<int:pk>/', CategoryViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
-    path('answer/', AnswerViewSet.as_view({'get': 'list', 'post': 'create'})),
-    path('answer/<int:pk>/', AnswerViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
-    path('useranswer/', UserAnswerViewSet.as_view({'get': 'list', 'post': 'create'})),
-    path('useranswer/<int:pk>/', UserAnswerViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
-    # path('quizes/user/', UserViewSet.as_view({'get': 'list', 'post': 'create'})),
-    # path('quizes/user/<int:pk>/', UserViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
-    path('userquiz/', UserQuizViewSet.as_view({'get': 'list', 'post': 'create'})),
-    path('userquiz/<int:pk>/', UserQuizViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
-    # path('quizquestion/', QuizQuestionViewSet.as_view({'get': 'list', 'post': 'create'})),
-    # path('quizquestion/<int:pk>/', QuizQuestionViewSet.as_view({'get': 'retrieve', 'put': 'update', 'delete': 'destroy'})),
+    # Category urls
+    path('categories/', GetCategories.as_view(), name='category-list'),
+    
+    # Quiz urls
+    path('quizes/', GetQuizes.as_view(), name='quizes'),
+    path('quizes/list/', QuizListView.as_view()),
+    path('quizes/<int:pk>/detail/', QuizDetailView.as_view()),
+    path('quizes/<int:pk>/', GetQuiz.as_view()),
+
+    path('categories/<int:pk>/quizes/', GetQuizesByCategory.as_view(), name='quiz-list'),
+
+    # Question urls
+    path('questions/', GetQuestions.as_view()),
+    path('questions/list/', QuestionListView.as_view()),
+    path('questions/<int:pk>/', QuestionDetailView.as_view()),
+
+    # Answer urls
+    path('answers/', AnswerListView.as_view()),
+
+    # Result urls
+    path('answers/showresult/', ShowResult.as_view()),
 ]
+
+
 

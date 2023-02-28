@@ -1,235 +1,182 @@
-from rest_framework import views, status, permissions, generics, viewsets
-
+from rest_framework import views, status, generics
 from rest_framework.response import Response
-
-from django.contrib.auth import get_user_model
-
-from django.utils.translation import gettext_lazy as _
-
 from django.shortcuts import get_object_or_404
-from django.db.models import Q
 
-User = get_user_model()
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
-from .models import (
-    Answer,
-    Quiz,
-    Question,
-    Category,
-    UserQuiz,
-    UserAnswer,
-)
-
+from .models import Quiz, Category, Question, Answer
 from .serializers import (
-    AnswerSerializer,
     QuizSerializer,
-    QuestionSerializer,
     CategorySerializer,
-    UserAnswerSerializer,
-    UserQuizSerializer,
+    QuestionSerializer,
+    AnswerSerializer,
+    DisplayQuizSerializer,
+    DisplayQuestionSerializer,
+    DisplayQuizesByCategorySerializer,
 )
 
-from users.serializers import UserSerializer
 
-
-class QuizViewSet(viewsets.ModelViewSet):
+class QuizListView(generics.ListAPIView):
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        queryset = self.queryset
-        query = self.request.query_params.get('query', None)
-        if query is not None:
-            queryset = queryset.filter(
-                Q(quiz__icontains=query)
-            )
-        return queryset
 
-    def perform_create(self, serializer):
-        serializer.save()
+class QuizDetailView(generics.RetrieveAPIView):
+    queryset = Quiz.objects.all()
+    serializer_class = QuizSerializer
 
-    def perform_update(self, serializer):
-        serializer.save()
 
-    def perform_destroy(self, instance):
-        instance.delete()
-
-    def get_serializer_context(self):
-        context = super(QuizViewSet, self).get_serializer_context()
-        context.update({'request': self.request})
-        return context
-    
-class QuestionViewSet(viewsets.ModelViewSet):
+class QuestionListView(generics.ListAPIView):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        queryset = self.queryset
-        query = self.request.query_params.get('query', None)
-        if query is not None:
-            queryset = queryset.filter(
-                Q(title__icontains=query) |
-                Q(description__icontains=query)
-            )
-        return queryset
+class QuestionDetailView(generics.RetrieveAPIView):
+    queryset = Question.objects.all()
+    serializer_class = QuestionSerializer
 
-    def perform_create(self, serializer):
-        serializer.save()
 
-    def perform_update(self, serializer):
-        serializer.save()
-
-    def perform_destroy(self, instance):
-        instance.delete()
-
-    def get_serializer_context(self):
-        context = super(QuestionViewSet, self).get_serializer_context()
-        context.update({'request': self.request})
-        return context
-    
-class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.all()
-    serializer_class = CategorySerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        queryset = self.queryset
-        query = self.request.query_params.get('query', None)
-        if query is not None:
-            queryset = queryset.filter(
-                Q(name__icontains=query)
-            )
-        return queryset
-
-    def perform_create(self, serializer):
-        serializer.save()
-
-    def perform_update(self, serializer):
-        serializer.save()
-
-    def perform_destroy(self, instance):
-        instance.delete()
-
-    def get_serializer_context(self):
-        context = super(CategoryViewSet, self).get_serializer_context()
-        context.update({'request': self.request})
-        return context
-    
-class UserQuizViewSet(viewsets.ModelViewSet):
-    queryset = UserQuiz.objects.all()
-    serializer_class = UserQuizSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        queryset = self.queryset
-        query = self.request.query_params.get('query', None)
-        if query is not None:
-            queryset = queryset.filter(
-                Q(user__username__icontains=query) |
-                Q(quiz__quiz__icontains=query)
-            )
-        return queryset
-
-    def perform_create(self, serializer):
-        serializer.save()
-
-    def perform_update(self, serializer):
-        serializer.save()
-
-    def perform_destroy(self, instance):
-        instance.delete()
-
-    def get_serializer_context(self):
-        context = super(UserQuizViewSet, self).get_serializer_context()
-        context.update({'request': self.request})
-        return context
-    
-class UserAnswerViewSet(viewsets.ModelViewSet):
-    queryset = UserAnswer.objects.all()
-    serializer_class = UserAnswerSerializer
-    permission_classes = [permissions.IsAuthenticated]
-
-    def get_queryset(self):
-        queryset = self.queryset
-        query = self.request.query_params.get('query', None)
-        if query is not None:
-            queryset = queryset.filter(
-                Q(user__username__icontains=query) |
-                Q(question__title__icontains=query)
-            )
-        return queryset
-
-    def perform_create(self, serializer):
-        serializer.save()
-
-    def perform_update(self, serializer):
-        serializer.save()
-
-    def perform_destroy(self, instance):
-        instance.delete()
-
-    def get_serializer_context(self):
-        context = super(UserAnswerViewSet, self).get_serializer_context()
-        context.update({'request': self.request})
-        return context
-    
-class AnswerViewSet(viewsets.ModelViewSet):
+class AnswerListView(generics.ListAPIView):
     queryset = Answer.objects.all()
     serializer_class = AnswerSerializer
-    permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
-        queryset = self.queryset
-        query = self.request.query_params.get('query', None)
-        if query is not None:
-            queryset = queryset.filter(
-                Q(answer__icontains=query)
-            )
-        return queryset
 
-    def perform_create(self, serializer):
-        serializer.save()
-
-    def perform_update(self, serializer):
-        serializer.save()
-
-    def perform_destroy(self, instance):
-        instance.delete()
-
-    def get_serializer_context(self):
-        context = super(AnswerViewSet, self).get_serializer_context()
-        context.update({'request': self.request})
-        return context
+class GetQuiz(views.APIView):
+    def get(self, request, *args, **kwargs):
+        quiz = Quiz.objects.get(id=kwargs['pk'])
+        serializer = DisplayQuizSerializer(quiz)
+        return Response(serializer.data)
     
-# class UserViewSet(viewsets.ModelViewSet):
-#     queryset = User.objects.all()
-#     serializer_class = UserSerializer
-#     permission_classes = [permissions.IsAuthenticated]
+class GetQuizes(views.APIView):
+    def get(self, request, *args, **kwargs):
+        quizes = Quiz.objects.all()
+        serializer = QuizSerializer(quizes, many=True)
+        return Response(serializer.data)
+    
+class GetCategories(views.APIView):
+    def get(self, request, *args, **kwargs):
+        categories = Category.objects.all()
+        serializer = CategorySerializer(categories, many=True)
+        return Response(serializer.data)
+    
+class GetQuestions(views.APIView):
+    def get(self, request, *args, **kwargs):
+        questions = Question.objects.all()
+        serializer = DisplayQuestionSerializer(questions, many=True)
+        return Response(serializer.data)
+    
+class GetAnswers(views.APIView):
+    def get(self, request, *args, **kwargs):
+        answers = Answer.objects.all()
+        serializer = AnswerSerializer(answers, many=True)
+        return Response(serializer.data)
+    
+class GetQuestionsByQuiz(views.APIView):
+    def get(self, request, *args, **kwargs):
+        questions = Question.objects.filter(quiz=kwargs['pk'])
+        serializer = DisplayQuestionSerializer(questions, many=True)
+        return Response(serializer.data)
+    
+class GetAnswersByQuestion(views.APIView):
+    def get(self, request, *args, **kwargs):
+        answers = Answer.objects.filter(question=kwargs['pk'])
+        serializer = AnswerSerializer(answers, many=True)
+        return Response(serializer.data)
+    
+class GetQuizByCategory(views.APIView):
+    def get(self, request, *args, **kwargs):
+        quizes = Quiz.objects.filter(category=kwargs['pk'])
+        serializer = QuizSerializer(quizes, many=True)
+        return Response(serializer.data)
+    
 
-#     def get_queryset(self):
-#         queryset = self.queryset
-#         query = self.request.query_params.get('query', None)
-#         if query is not None:
-#             queryset = queryset.filter(
-#                 Q(username__icontains=query) |
-#                 Q(email__icontains=query)
-#             )
-#         return queryset
+class GetPostedAnswers(views.APIView):
+    def post(self, request, *args, **kwargs):
+        answers = request.data['answers']
+        correct_answers = 0
+        for answer in answers:
+            if Answer.objects.get(id=answer['id']).is_correct:
+                correct_answers += 1
+        return Response({'correct_answers': correct_answers})
+    
 
-#     def perform_create(self, serializer):
-#         serializer.save()
+class ShowResult(views.APIView):
+    def __init__(self, **kwargs) -> None:
+        super().__init__(**kwargs)
+        self.result = 0
+        self.total = 0
 
-#     def perform_update(self, serializer):
-#         serializer.save()
 
-#     def perform_destroy(self, instance):
-#         instance.delete()
-
-#     def get_serializer_context(self):
-#         context = super(UserViewSet, self).get_serializer_context()
-#         context.update({'request': self.request})
-#         return context
- 
+    @swagger_auto_schema(request_body=openapi.Schema(
+        type=openapi.TYPE_OBJECT,
+        properties={
+            'answers': openapi.Schema(type=openapi.TYPE_ARRAY, 
+                items=openapi.Items(type=openapi.TYPE_OBJECT, 
+                properties={
+                    'id': openapi.Schema(
+                        type=openapi.TYPE_INTEGER, description='Answer id'
+                        ),
+                        }
+                    )
+                )
+            }
+        ),
+        operation_summary='Show result of quiz',
+        responses={
+            200: openapi.Response(
+                description='Result of quiz',
+                schema=openapi.Schema(
+                    type=openapi.TYPE_OBJECT,
+                    properties={
+                        'result': openapi.Schema(
+                            type=openapi.TYPE_INTEGER, description='Correct answers'
+                            ),
+                        'total': openapi.Schema(
+                            type=openapi.TYPE_INTEGER, description='Total questions'
+                            ),
+                        }
+                    )
+            ),
+            400: openapi.Response(
+                description='Bad request. Did you provide `answers`. `answers` must be a list of answer ids',
+                examples={
+                    'error': 'Did you provide `answers` '
+                }
+            ),
+            500: openapi.Response(
+                description='Internal server error',
+                examples={
+                    'error': 'Something went wrong. Did you provide `answers` '
+                }
+            )
+        }
+    )
+    def post(self, request, *args, **kwargs):
+        try:
+            answers = request.data.get('answers', None)
+            if not answers:
+                return Response({'error': 'Did you provide `answers` '}, status=status.HTTP_400_BAD_REQUEST)
+            print(answers)
+            if not isinstance(answers, list):
+                return Response({'error': '`answers` must be a list of answer ids'}, status=status.HTTP_400_BAD_REQUEST)
+            for answer in answers:
+                answer_obj = get_object_or_404(Answer, id=answer['id'])
+                if answer_obj.is_correct:
+                    self.result += 1
+                self.total += 1
+            return Response({'result': self.result, 'total': self.total})
+        except Exception as e:
+            print(e)
+            return Response({'error': 'Something went wrong. Did you provide `answers` '}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            
+    
+class GetQuizesByCategory(views.APIView):
+    def get(self, request, *args, **kwargs):
+        try:
+            category = get_object_or_404(Category, id=kwargs['pk'])
+            serializer = DisplayQuizesByCategorySerializer(category, many=False)
+            return Response(serializer.data)
+        except:
+            return Response({'error': 'Category does not exist'}, status=status.HTTP_404_NOT_FOUND)
+        
 

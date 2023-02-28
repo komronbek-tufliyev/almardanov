@@ -42,10 +42,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'drf_yasg',
-    'quiz',
-    'users',
     'corsheaders',
 
+    'quiz',
 ]
 
 MIDDLEWARE = [
@@ -146,5 +145,5 @@ REST_FRAMEWORK = {
 }
 
 
-AUTH_USER_MODEL = 'users.CustomUser'
+# AUTH_USER_MODEL = 'users.CustomUser'
 

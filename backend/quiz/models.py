@@ -1,96 +1,75 @@
 from django.db import models
-from django.contrib.auth import get_user_model
+
 from django.utils.translation import gettext_lazy as _
 
-User = get_user_model()
-
-# Create your models here.
 
 class Category(models.Model):
     name = models.CharField(max_length=255, verbose_name=_('Name'))
+    date_created = models.DateTimeField(auto_now_add=True, verbose_name=_('Date created'))
+    date_updated = models.DateTimeField(auto_now=True, verbose_name=_('Date updated'))
     
-    def __str__(self) -> str:
+    class Meta:
+        verbose_name = _('Category')
+        verbose_name_plural = _('Categories')
+        ordering = ('-date_created',)
+
+    def __str__(self):
         return self.name
 
 
 class Quiz(models.Model):
-    author = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('User'))
-    category = models.ForeignKey(Category, on_delete=models.DO_NOTHING, default=1, related_name='quizzes', verbose_name=_('Category'))
-    title = models.CharField(max_length=255, verbose_name=_('Title'), help_text=_('Title'), null=True, blank=True)
-    description = models.TextField(null=True, blank=True)
-    date_created = models.DateTimeField(auto_now_add=True, verbose_name=_('Date Created'))
-    date_updated = models.DateTimeField(auto_now=True, verbose_name=_('Date Updated'))
-    
-    
-    def __str__(self) -> str:
-        return self.title
-    
+    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='quizes', verbose_name=_('Category'))
+    title = models.CharField(max_length=255, verbose_name=_('Title'))
+    description = models.TextField(verbose_name=_('Description'), null=True, blank=True)
+    date_created = models.DateTimeField(auto_now_add=True, verbose_name=_('Date created'))
+    date_updated = models.DateTimeField(auto_now=True, verbose_name=_('Date updated'))
+    image = models.ImageField(upload_to='quiz_images/', null=True, blank=True)
+
     class Meta:
         verbose_name = _('Quiz')
         verbose_name_plural = _('Quizes')
-        ordering = ['id']
-        
+        ordering = ('-date_created',)
+
+    def __str__(self):
+        return self.title
+
+
 class Question(models.Model):
     DIFFICULTY = (
         ('0', _('Beginner')),
         ('1', _('Intermediate')),
         ('2', _('Advanced'))
-    )   
-    
-    quiz = models.ForeignKey(Quiz, on_delete=models.DO_NOTHING, verbose_name=_('Quiz'))
-    title = models.CharField(max_length=255, verbose_name=_('Title'))
-    difficulty = models.CharField(choices=DIFFICULTY, max_length=20, verbose_name=_('Difficulty'), default=DIFFICULTY[1][1])
-    description = models.TextField(null=True, blank=True)
-    
-    date_created = models.DateTimeField(auto_now_add=True, verbose_name=_('Date Created'))
-    date_updated = models.DateTimeField(auto_now=True, verbose_name=_('Date Updated'))
-    
-    
-    def __str__(self) -> str:
-        return self.title
-    
+    )
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions', verbose_name=_('Quiz'))
+    text = models.TextField(verbose_name=_('Text'))
+    difficulty = models.CharField(choices=DIFFICULTY, max_length=20, verbose_name=_('Difficulty'), default=DIFFICULTY[0][0])
+    date_created = models.DateTimeField(auto_now_add=True, verbose_name=_('Date created'))
+    date_updated = models.DateTimeField(auto_now=True, verbose_name=_('Date updated'))
+    image = models.ImageField(upload_to='question_images/', null=True, blank=True)
     class Meta:
         verbose_name = _('Question')
         verbose_name_plural = _('Questions')
-        ordering = ['id']
+        ordering = ('-date_created',)
+
+    def __str__(self):
+        return self.text
     
+
 class Answer(models.Model):
-    answer = models.CharField(verbose_name=_('Answer'), max_length=150)
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, verbose_name=_('Question'), related_name='answers', null=True)
-    is_correct = models.BooleanField(default=False)
-    
-    def __str__(self) -> str:
-        return self.answer
-    
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='answers', verbose_name=_('Question'))
+    text = models.TextField(verbose_name=_('Text'))
+    is_correct = models.BooleanField(default=False, verbose_name=_('Is correct'))
+    date_created = models.DateTimeField(auto_now_add=True, verbose_name=_('Date created'))
+    date_updated = models.DateTimeField(auto_now=True, verbose_name=_('Date updated'))
+    image = models.ImageField(upload_to='answer_images/', null=True, blank=True)
+
     class Meta:
         verbose_name = _('Answer')
         verbose_name_plural = _('Answers')
-        ordering = ['id']
-        
-class UserAnswer(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('User'))
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, verbose_name=_('Question'))
-    answer = models.ForeignKey(Answer, on_delete=models.CASCADE, verbose_name=_('Answer'))
-    is_correct = models.BooleanField(default=False)
-    
-    def __str__(self) -> str:
-        return self.answer
-    
-    class Meta:
-        verbose_name = _('User Answer')
-        verbose_name_plural = _('User Answers')
-        ordering = ['id']
+        ordering = ('-date_created',)
 
-        
-class UserQuiz(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name=_('User'))
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, verbose_name=_('Quiz'))
-    score = models.IntegerField(default=0, verbose_name=_('Score'))
+    def __str__(self):
+        return self.text
     
-    def __str__(self) -> str:
-        return self.quiz.title
-    
-    class Meta:
-        verbose_name = _('User Quiz')
-        verbose_name_plural = _('User Quizes')
-        ordering = ['id']
+
+

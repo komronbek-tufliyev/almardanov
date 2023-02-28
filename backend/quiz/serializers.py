@@ -1,72 +1,55 @@
+from rest_framework import serializers
 from .models import (
-    Answer, 
-    Quiz, 
-    Question, 
+    Quiz,
     Category,
-    UserQuiz,
-    UserAnswer,
+    Question,
+    Answer
 )
 
-from rest_framework import serializers
-from django.contrib.auth import get_user_model
 
-User = get_user_model()
-
-# class UserSerializer(serializers.ModelSerializer):
-#     class Meta:
-#         model = User 
-#         fields = ('username', 'email', 'first_name', 'last_name', 'is_active', 'is_admin', )
-#         ref_name = 'User'
-
-class AnswerSerializer(serializers.ModelSerializer):
+class CategorySerializer(serializers.ModelSerializer):
     class Meta:
-        model = Answer
-        fields = ('id', 'question', 'answer', 'is_correct', )
-        ref_name = 'Answer'
+        model = Category
+        fields = ['id', 'name', ]
 
 
-class QuizSerializer(serializers.Serializer):
-    answers = AnswerSerializer(many=True)
-    quiz = serializers.CharField(max_length=255, required=True)
-
-    def create(self, validated_data):
-        answers = validated_data.pop('answers')
-        quiz = Quiz.objects.create(**validated_data)
-        for answer in answers:
-            Answer.objects.create(quiz=quiz, **answer)
-        return quiz
-    
-    def update(self, instance, validated_data):
-        answers = validated_data.pop('answers')
-        instance.quiz = validated_data.get('quiz', instance.quiz)
-        instance.save()
-        for answer in answers:
-            answer_instance = Answer.objects.get(id=answer.get('id'))
-            answer_instance.answer_text = answer.get('answer_text', answer_instance.answer_text)
-            answer_instance.is_correct = answer.get('is_correct', answer_instance.is_correct)
-            answer_instance.save()
-        return instance
+class QuizSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Quiz
+        fields = ['id', 'title', 'category', 'image', 'date_created',]
 
 
 class QuestionSerializer(serializers.ModelSerializer):
     class Meta:
         model = Question
-        fields = ('id', 'quiz', 'title', 'difficulty', 'description', )
-        ref_name = 'Question'
-class CategorySerializer(serializers.ModelSerializer):
+        fields = ['id', 'text', 'quiz', 'image', 'date_created',]
+
+class AnswerSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Answer
+        fields = ['id', 'text', 'question', 'image', 'is_correct', 'date_created',]
+
+
+class DisplayQuestionSerializer(serializers.ModelSerializer):
+    answers = AnswerSerializer(many=True)
+    category = serializers.CharField(source='quiz.category.name')
+
+    class Meta:
+        model = Question
+        fields = '__all__'
+
+class DisplayQuizSerializer(serializers.ModelSerializer):
+    questions = DisplayQuestionSerializer(many=True)
+
+    class Meta:
+        model = Quiz
+        fields = '__all__'
+
+class DisplayQuizesByCategorySerializer(serializers.ModelSerializer):
+    quizes = QuizSerializer(many=True)
+
     class Meta:
         model = Category
-        fields = ('id', 'name', )
+        fields = ['id', 'name', 'quizes', 'image', 'date_created',]
 
-class UserQuizSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserQuiz
-        fields = ('id', 'user', 'quiz', 'score', )
-        ref_name = 'UserQuiz'
 
-class UserAnswerSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = UserAnswer
-        fields = ('id', 'question', 'answer', 'is_correct', )
-        ref_name = 'UserAnswer'
-        
