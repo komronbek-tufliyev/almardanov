@@ -4,6 +4,7 @@ import reportWebVitals from './reportWebVitals';
 // import './index.css';
 import Navbar from './components/Navbar';
 import QuizPage from './views/QuizPage';
+
 // import HomePage from './views/HomePage';
 // import Carousel from './components/Carousel';
 // import Accordion from './components/Accordion';

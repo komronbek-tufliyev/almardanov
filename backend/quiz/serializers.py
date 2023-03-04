@@ -50,6 +50,6 @@ class DisplayQuizesByCategorySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Category
-        fields = ['id', 'name', 'quizes', 'image', 'date_created',]
+        fields = ['id', 'name', 'quizes', 'date_created',]
 
 

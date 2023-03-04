@@ -5,6 +5,8 @@ from django.shortcuts import get_object_or_404
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
+from rest_framework import pagination
+
 from .models import Quiz, Category, Question, Answer
 from .serializers import (
     QuizSerializer,
@@ -17,9 +19,18 @@ from .serializers import (
 )
 
 
+class MyPagination(pagination.PageNumberPagination):
+    page_size = 10
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
+    page_query_param = 'page'
+
+
+
 class QuizListView(generics.ListAPIView):
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
+    pagination_class = MyPagination
 
 
 class QuizDetailView(generics.RetrieveAPIView):
@@ -59,11 +70,16 @@ class GetCategories(views.APIView):
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
     
-class GetQuestions(views.APIView):
-    def get(self, request, *args, **kwargs):
-        questions = Question.objects.all()
-        serializer = DisplayQuestionSerializer(questions, many=True)
-        return Response(serializer.data)
+class GetQuestions(generics.ListAPIView):
+    pagination_class = MyPagination
+    queryset = Question.objects.all()
+    serializer_class = DisplayQuestionSerializer
+
+
+    # def get(self, request, *args, **kwargs):
+    #     questions = Question.objects.all()
+    #     serializer = DisplayQuestionSerializer(questions, many=True)
+    #     return Response(serializer.data)
     
 class GetAnswers(views.APIView):
     def get(self, request, *args, **kwargs):
@@ -101,6 +117,7 @@ class GetPostedAnswers(views.APIView):
     
 
 class ShowResult(views.APIView):
+
     def __init__(self, **kwargs) -> None:
         super().__init__(**kwargs)
         self.result = 0
@@ -173,7 +190,7 @@ class ShowResult(views.APIView):
 class GetQuizesByCategory(views.APIView):
     def get(self, request, *args, **kwargs):
         try:
-            category = get_object_or_404(Category, id=kwargs['pk'])
+            category = get_object_or_404(Category, pk=kwargs['pk'])
             serializer = DisplayQuizesByCategorySerializer(category, many=False)
             return Response(serializer.data)
         except:
