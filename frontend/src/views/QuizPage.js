@@ -35,7 +35,7 @@ export default function QuizPage() {
     const currentQuestions = questions.slice(indexOfFirstQuestion, indexOfLastQuestion);
 
     return (
-        <div className="mt-3">
+        <div className="mt-3 container">
             <h2 className="text=primary mb-3">
                 Question List
             </h2>
