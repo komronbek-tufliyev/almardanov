@@ -16,6 +16,7 @@ from .serializer import (
     DetailQuestionSerializer,
     DetailTempUserSerializer,
     DetailCategorySerializer,
+    DisplayQuestionsByQuizID,
 )
 from rest_framework.response import Response
 from rest_framework.decorators import action
@@ -37,7 +38,8 @@ class QuizViewSet(viewsets.ModelViewSet):
     @action(detail=True, methods=['get'])
     def questions(self, request, pk=None):
         quiz = self.get_object()
-        serializer = DetailQuizSerializer(quiz)
+        questions = Question.objects.filter(quiz=quiz)
+        serializer = DisplayQuestionsByQuizID(questions, many=True)
         return Response(serializer.data)
     
 class QuestionViewSet(viewsets.ModelViewSet):
@@ -48,24 +50,19 @@ class QuestionViewSet(viewsets.ModelViewSet):
     def quiz(self, request, pk=None):
         question = self.get_object()
         serializer = DetailQuestionSerializer(question)
+        
         return Response(serializer.data)
     
 class TempUserViewSet(viewsets.ModelViewSet):
     queryset = TempUser.objects.all()
     serializer_class = TempUserSerializer
 
-    @action(detail=True, methods=['get'])
-    def quiz(self, request, pk=None):
-        temp_user = self.get_object()
-        serializer = DetailTempUserSerializer(temp_user)
-        return Response(serializer.data)
-
-    @action(detail=True, methods=['get'])
-    def questions(self, request, pk=None):
-        temp_user = self.get_object()
-        serializer = DetailTempUserSerializer(temp_user)
-        return Response(serializer.data)
-
+    def create(self, request, *args, **kwargs):
+        serializer = TempUserSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors)
 
 # View to take a quiz. Post the answers to the questions.
 
@@ -74,7 +71,7 @@ from rest_framework.views import APIView
 class TakeQuizView(APIView):
     def get(self, request, *args, **kwargs):
         query = Question.objects.all()
-        serializer = DetailQuestionSerializer()       # serializer.is_valid()
+        serializer = DetailQuestionSerializer(query, many=True)       # serializer.is_valid()
         return Response(serializer.data)
 
 
@@ -117,14 +114,14 @@ class TakeQuizView(APIView):
         ]
         answers = request.data.get('answers', None)
         if answers is None:
-            return Response({'error': 'No answers provided'}, status=400)
+            return Response({'error': 'No answers provided', 'example_request_body': simple_req_body}, status=400)
         
         score = 0
         total = 0
         for answer in answers:
             question = Question.objects.get(id=answer['question_id'])
             correct_answer = question.get_correct_answer()
-            print(correct_answer, request.data[str(question.id)])
+            print(correct_answer, answer['answer'], correct_answer == answer['answer'], sep=' | ')
             if correct_answer == answer['answer']:
                 score += 1
             total += 1

@@ -47,9 +47,15 @@ class Question(models.Model):
 
     def __str__(self):
         return self.text
-    
+
     def get_correct_answer(self):
-        return self.CORRECT_ANSWER_CHOICES[int(self.correct_answer) - 1][1]
+        c_a = int(self.correct_answer)
+        return {
+            1: self.answer1,
+            2: self.answer2,
+            3: self.answer3,
+            4: self.answer4,
+        }.get(c_a, 'Invalid answer')
     
     def get_answers(self):
         return [self.answer1, self.answer2, self.answer3, self.answer4]
@@ -58,6 +64,7 @@ class Question(models.Model):
         answers = self.get_answers()
         answers[int(self.correct_answer) - 1] = f'{answers[int(self.correct_answer) - 1]} (correct)'
         return answers
+
     
 class TempUser(models.Model):
     name = models.CharField(max_length=255, verbose_name=_('Name'))

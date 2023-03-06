@@ -12,14 +12,19 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 class QuizSerializer(serializers.ModelSerializer):
+    category = serializers.CharField(source='category.name', read_only=True)
+    category_id = serializers.IntegerField(source='category.id', read_only=True)
+
     class Meta:
         model = Quiz
-        fields = ('id', 'name', 'category')
+        fields = ('id', 'name', 'category', 'category_id')
 
 class QuestionSerializer(serializers.ModelSerializer):
+    quiz = serializers.CharField(source='quiz.name', read_only=True)
+    quiz_id = serializers.IntegerField(source='quiz.id', read_only=True)
     class Meta:
         model = Question
-        fields = ('id', 'quiz', 'text', 'answer1', 'answer2', 'answer3', 'answer4', 'correct_answer')
+        fields = ('id', 'quiz', 'quiz_id', 'text', 'answer1', 'answer2', 'answer3', 'answer4')
 
 class TempUserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -29,17 +34,27 @@ class TempUserSerializer(serializers.ModelSerializer):
 
 class DetailQuizSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, read_only=True)
+    category = serializers.CharField(source='category.name', read_only=True)
+    category_id = serializers.IntegerField(source='category.id', read_only=True)
 
     class Meta:
         model = Quiz
-        fields = ('id', 'name', 'category', 'questions')
+        fields = ('id', 'name', 'category', 'category_id', 'questions')
 
-class DetailQuestionSerializer(serializers.ModelSerializer):
+class DisplayQuestionsByQuizID(serializers.ModelSerializer):
     quiz = QuizSerializer(read_only=True)
 
     class Meta:
         model = Question
-        fields = ('id', 'quiz', 'text', 'answer1', 'answer2', 'answer3', 'answer4', 'correct_answer')
+        fields = ('id', 'quiz', 'text', 'answer1', 'answer2', 'answer3', 'answer4')
+
+class DetailQuestionSerializer(serializers.ModelSerializer):
+    quiz = QuizSerializer(read_only=True)
+    name = serializers.CharField(source='quiz.name', read_only=True)
+
+    class Meta:
+        model = Question
+        fields = ('id', 'quiz', 'text', 'answer1', 'answer2', 'answer3', 'answer4', 'name')
 
 class DetailTempUserSerializer(serializers.ModelSerializer):
     quiz = QuizSerializer(read_only=True)

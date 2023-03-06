@@ -8,18 +8,19 @@ from .views import (
 )
 
 urlpatterns = [
-    path('category/', CategoryViewSet.as_view({'get': 'list'})),
-    path('category/<int:pk>/', CategoryViewSet.as_view({'get': 'retrieve'})),
-    path('category/<int:pk>/quizzes/', CategoryViewSet.as_view({'get': 'quizzes'})),
-    path('quiz/', QuizViewSet.as_view({'get': 'list'})),
-    path('quiz/<int:pk>/', QuizViewSet.as_view({'get': 'retrieve'})),
-    path('quiz/<int:pk>/questions/', QuizViewSet.as_view({'get': 'questions'})),
-    path('question/', QuestionViewSet.as_view({'get': 'list'})),
-    path('question/<int:pk>/', QuestionViewSet.as_view({'get': 'retrieve'})),
-    path('question/<int:pk>/quiz/', QuestionViewSet.as_view({'get': 'quiz'})),
+    path('categories/', CategoryViewSet.as_view({'get': 'list'})),
+    path('categories/<int:pk>/', CategoryViewSet.as_view({'get': 'retrieve'})),
+    path('categories/<int:pk>/quizzes/', CategoryViewSet.as_view({'get': 'quizzes'})),
+    path('quizzes/', QuizViewSet.as_view({'get': 'list'})),
+    path('quizzes/<int:pk>/', QuizViewSet.as_view({'get': 'retrieve'})),
+    path('quizzes/<int:pk>/questions/', QuizViewSet.as_view({'get': 'questions'})),
+    path('questions/', QuestionViewSet.as_view({'get': 'list'})),
+    path('questions/<int:pk>/', QuestionViewSet.as_view({'get': 'retrieve'})),
+    path('questions/<int:pk>/quiz/', QuestionViewSet.as_view({'get': 'quiz'})),
     path('tempuser/', TempUserViewSet.as_view({'get': 'list'})),
+    # create a new temp user
+    path('tempuser/create/', TempUserViewSet.as_view({'post': 'create'})),
     path('tempuser/<int:pk>/', TempUserViewSet.as_view({'get': 'retrieve'})),
-    path('tempuser/<int:pk>/quiz/', TempUserViewSet.as_view({'get': 'quiz'})),
 
     # View to take a quiz. Post the answers to the questions.
     path('takequiz/', TakeQuizView.as_view()),
