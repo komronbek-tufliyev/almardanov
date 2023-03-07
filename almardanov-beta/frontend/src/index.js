@@ -3,15 +3,18 @@ import ReactDOM from 'react-dom/client';
 import reportWebVitals from './reportWebVitals';
 
 
+import Navbar from './components/Navbar';
+import QuizPage from './components/QuizPage';
 
-import Navbar from './components/Navbar2';
-import HomePage from './views/HomePage';
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <Navbar />
-    <HomePage />
+    <QuizPage />
   </React.StrictMode>
 );
 
