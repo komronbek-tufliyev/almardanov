@@ -24,6 +24,9 @@ class Quiz(models.Model):
     def __str__(self):
         return self.name
     
+    def count_questions_by_category(self):
+        return str(Question.objects.filter(quiz=self.pk).count())
+    
 
 class Question(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, verbose_name=_('Quiz'))

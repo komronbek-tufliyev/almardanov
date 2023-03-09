@@ -14,10 +14,11 @@ class CategorySerializer(serializers.ModelSerializer):
 class QuizSerializer(serializers.ModelSerializer):
     category = serializers.CharField(source='category.name', read_only=True)
     category_id = serializers.IntegerField(source='category.id', read_only=True)
+    questions_count = serializers.IntegerField(source='count_questions_by_category', read_only=True)
 
     class Meta:
         model = Quiz
-        fields = ('id', 'name', 'category', 'category_id')
+        fields = ('id', 'name', 'category', 'category_id', 'questions_count')
 
 class QuestionSerializer(serializers.ModelSerializer):
     quiz = serializers.CharField(source='quiz.name', read_only=True)
@@ -36,10 +37,12 @@ class DetailQuizSerializer(serializers.ModelSerializer):
     questions = QuestionSerializer(many=True, read_only=True)
     category = serializers.CharField(source='category.name', read_only=True)
     category_id = serializers.IntegerField(source='category.id', read_only=True)
+    questions_count = serializers.IntegerField(source='count_questions_by_category', read_only=True)
+
 
     class Meta:
         model = Quiz
-        fields = ('id', 'name', 'category', 'category_id', 'questions')
+        fields = ('id', 'name', 'category', 'category_id', 'questions', 'questions_count', )
 
 class DisplayQuestionsByQuizID(serializers.ModelSerializer):
     quiz = QuizSerializer(read_only=True)

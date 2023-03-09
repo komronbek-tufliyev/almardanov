@@ -42,6 +42,13 @@ class QuizViewSet(viewsets.ModelViewSet):
         serializer = DisplayQuestionsByQuizID(questions, many=True)
         return Response(serializer.data)
     
+    @action(detail=False, methods=['GET'])
+    def get_quiz_by_category(self, request, category, *args, **kwargs):
+        if request.method == 'GET':
+            query = Quiz.objects.filter(category__name=category)
+            return Response(self.serializer_class(query, many=True).data)
+        return Response("Another method requested")
+    
 class QuestionViewSet(viewsets.ModelViewSet):
     queryset = Question.objects.all()
     serializer_class = QuestionSerializer
