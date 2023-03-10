@@ -12,7 +12,7 @@ from .serializer import (
     QuizSerializer,
     QuestionSerializer,
     TempUserSerializer,
-    DetailQuizSerializer,
+    DisplayQuizzesWithQuestions,
     DetailQuestionSerializer,
     DetailTempUserSerializer,
     DetailCategorySerializer,
@@ -35,6 +35,17 @@ class QuizViewSet(viewsets.ModelViewSet):
     queryset = Quiz.objects.all()
     serializer_class = QuizSerializer
 
+
+    @action(detail=True, methods=['get'])
+    def retrieve(self, request, *args, **kwargs):
+        query = Question.objects.filter(quiz=self.get_object())
+        serializer = DisplayQuizzesWithQuestions(query, many=True)
+        try:
+            return Response(serializer.data)
+        except Exception as e:
+            return Response({"error": f"{e}"})
+
+        
     @action(detail=True, methods=['get'])
     def questions(self, request, pk=None):
         quiz = self.get_object()

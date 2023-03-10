@@ -1,4 +1,4 @@
-import { Container, ListGroup, ListGroupItem, FormSelect } from "react-bootstrap";
+import { Container, ListGroup, ListGroupItem, Row, Col } from "react-bootstrap";
 import {Form} from 'react-bootstrap';
 import { useState, useEffect } from "react";
 import axios from "axios";
@@ -9,9 +9,9 @@ import axios from "axios";
 export default function QuizPage(){
     const [quizzes, setQuiz] = useState([]);
     const [categories, setCategory] = useState([]);
-    const [category, setOneCategory] = useState('');
+    const [category, setOneCategory] = useState();
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(true);
+    const [error, setError] = useState(false);
     const [page, setPage] = useState(1);
 
     const base_url = 'http://127.0.0.1:8000/api/v1';
@@ -48,8 +48,18 @@ export default function QuizPage(){
 
     const get_quizes_by_catergory = async (category_name) => {
         try {
-            const response = await axios.get(`${base_url}/quizzes/${category_name}`);
-            console.log("Resp", response.data);
+            console.log("req category", category_name);
+            const response = await axios.get(`${base_url}/quizzes/by-category/${category_name}/`);
+            console.log("res", response);
+            console.log("Resp data", response.data.length);
+            console.log(response.data);
+            if (response.data.length > 0 ){
+                setQuiz(response.data);
+                console.log("No results");
+            }
+            else{
+                setQuiz([]);
+            }
             
         } catch (error) {
             setError(true);
@@ -61,7 +71,7 @@ export default function QuizPage(){
     function handleCategoryChange(event){
         console.log('event target value', event.target.value);
         setOneCategory(event.target.value);
-        get_quizes_by_catergory(category);
+        get_quizes_by_catergory(event.target.value);
         
     }
 
@@ -74,14 +84,17 @@ export default function QuizPage(){
     return (
         <Container className="mt-5">
             <h1 className="text-center mb-3">Quizzes</h1>
-            
+            {loading && <p>Loading...</p>}
+            {error && <p>Something went wrong!</p>}
                 {/* <ListGroupItem key={c.id}>
                 </ListGroupItem> */}
-            <Form.Select onChange={(event)=>{handleCategoryChange(event)}}>
-        
-                {categories.map(c => (
-                    <option key={c.id} >{c.name}</option>
-                ))}
+            <Form.Select onChange={(event)=>{handleCategoryChange(event)}} title="Category options">
+                {categories && 
+                    categories.map(c => (
+                        <option key={c.id} value={c.name}>{c.name}</option>
+                    )) 
+                }
+                
 
             </Form.Select>
             <br />    
@@ -89,11 +102,19 @@ export default function QuizPage(){
             
             <ListGroup>
                 <h4 className="text-info fw-normal">Lorem ipsum dolor sit amet consectetur adipisicing elit. Fugiat, aspernatur.</h4>
-            {quizzes.map(q => (
+            {quizzes.length > 0 ? quizzes.map(q => (
                 <ListGroupItem key={q.id}>
-                            {q.name}
+                            <Row className="mx-auto">
+                                <Col>
+                                    {q.name}
+                                </Col>
+                                <Col className="text-end">
+                                    <a href={base_url+'/quizzes/'+q.id}>Go to quiz</a>
+                                </Col>
+                            </Row>
                     </ListGroupItem>
-                ))}
+                )) : <p>No quizzes found</p>
+            }
             </ListGroup>
         </Container>                
     )

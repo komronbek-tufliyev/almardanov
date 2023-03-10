@@ -12,7 +12,7 @@ urlpatterns = [
     path('categories/<int:pk>/', CategoryViewSet.as_view({'get': 'retrieve'})),
     path('categories/<int:pk>/quizzes/', CategoryViewSet.as_view({'get': 'quizzes'})),
     path('quizzes/', QuizViewSet.as_view({'get': 'list'})),
-    path('quizzes/<str:category>/', QuizViewSet.as_view({'get': 'get_quiz_by_category'}), name='quizzes-by-category'),
+    path('quizzes/by-category/<str:category>/', QuizViewSet.as_view({'get': 'get_quiz_by_category'}), name='quizzes-by-category'),
     path('quizzes/<int:pk>/', QuizViewSet.as_view({'get': 'retrieve'})),
     path('quizzes/<int:pk>/questions/', QuizViewSet.as_view({'get': 'questions'})),
     path('questions/', QuestionViewSet.as_view({'get': 'list'})),
