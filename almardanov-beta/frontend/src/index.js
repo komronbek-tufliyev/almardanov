@@ -43,7 +43,7 @@ root.render(
           <Route path='quizzes' element={<QuizPage/>} />
           <Route path='takequiz' element={<TakeQuiz/>} /> 
           {/* // This is the line that is causing the error 'Cannot read property 'id' of undefined */}
-          <Route path='takequiz/:id' element={<TakeQuiz/>} />
+          <Route path='takequiz/:quiz_id' element={<TakeQuiz/>} />
           <Route path='questions' element={<QuestionsPage/>} />
           <Route path='about' element={<About/>} />
           <Route path='*' element={<NoPage/>} />

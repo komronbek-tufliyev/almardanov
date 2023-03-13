@@ -16,6 +16,7 @@ urlpatterns = [
     path('quizzes/<int:pk>/', QuizViewSet.as_view({'get': 'retrieve'})),
     path('quizzes/<int:pk>/questions/', QuizViewSet.as_view({'get': 'questions'})),
     path('questions/', QuestionViewSet.as_view({'get': 'list'})),
+    path('questions/<str:search>/', QuestionViewSet.as_view({'get': 'search'})),
     path('questions/<int:pk>/', QuestionViewSet.as_view({'get': 'retrieve'})),
     path('questions/<int:pk>/quiz/', QuestionViewSet.as_view({'get': 'quiz'})),
     path('tempuser/', TempUserViewSet.as_view({'get': 'list'})),

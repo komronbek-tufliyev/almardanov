@@ -21,6 +21,12 @@ from .serializer import (
 from rest_framework.response import Response
 from rest_framework.decorators import action
 
+from django.db.models import Count
+from django.db.models import Q
+from django.shortcuts import get_object_or_404
+
+
+
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
@@ -70,6 +76,16 @@ class QuestionViewSet(viewsets.ModelViewSet):
         serializer = DetailQuestionSerializer(question)
         
         return Response(serializer.data)
+    
+    @action(detail=False, methods=['GET'])
+    def search(self, request, search, *args, **kwargs):
+        print('search', search)
+        if request.method == 'GET':
+            query = Question.objects.filter(Q(text__icontains=search) | Q(answer1__icontains=search) | Q(answer2__icontains=search) | Q(answer3__icontains=search) | Q(answer4__icontains=search) | Q(quiz__category__name__icontains=search) | Q(quiz__name__icontains=search))
+            if query.count() == 0:
+                return Response({"error": "No results found"})
+            
+            return Response(self.serializer_class(query, many=True).data)
     
 class TempUserViewSet(viewsets.ModelViewSet):
     queryset = TempUser.objects.all()
@@ -121,11 +137,11 @@ class TakeQuizView(APIView):
     def post(self, request, *args, **kwargs):
         simple_req_body = [
             {
-                "question_id": 1,
+                "question": "Question name 1",
                 "answer": "answer1"
             },
             {
-                "question_id": 2,
+                "question": "Question name 2",
                 "answer": "answer2"
             },
 
@@ -136,8 +152,9 @@ class TakeQuizView(APIView):
         
         score = 0
         total = 0
+        print(answers)
         for answer in answers:
-            question = Question.objects.get(id=answer['question_id'])
+            question = Question.objects.get(text=answer['question'])
             correct_answer = question.get_correct_answer()
             print(correct_answer, answer['answer'], correct_answer == answer['answer'], sep=' | ')
             if correct_answer == answer['answer']:

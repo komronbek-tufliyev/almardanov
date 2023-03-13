@@ -109,7 +109,7 @@ export default function QuizPage(){
                                     {q.name}
                                 </Col>
                                 <Col className="text-end">
-                                    <a href={'/quizzes/'+q.id}>Go to quiz</a>
+                                    <a href={'/takequiz/'+q.id}>Go to quiz</a>
                                 </Col>
                             </Row>
                     </ListGroupItem>
