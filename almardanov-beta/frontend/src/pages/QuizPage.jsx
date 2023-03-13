@@ -1,5 +1,5 @@
 import { Container, ListGroup, ListGroupItem, Row, Col } from "react-bootstrap";
-import {Form} from 'react-bootstrap';
+import { Form } from 'react-bootstrap';
 import { useState, useEffect } from "react";
 import axios from "axios";
 
@@ -109,7 +109,7 @@ export default function QuizPage(){
                                     {q.name}
                                 </Col>
                                 <Col className="text-end">
-                                    <a href={base_url+'/quizzes/'+q.id}>Go to quiz</a>
+                                    <a href={'/quizzes/'+q.id}>Go to quiz</a>
                                 </Col>
                             </Row>
                     </ListGroupItem>

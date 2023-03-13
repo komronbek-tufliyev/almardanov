@@ -10,13 +10,16 @@ export default function QuestionsPage() {
     const [error, setError] = useState(false);
     const [page, setPage] = useState(1);
 
+    console.log("QuestionsPage");
     const fetchQuiz = async () => {
         try {
             setLoading(true);
             const response = await axios.get('http://127.0.0.1:8000/api/v1/quizzes/');
+            console.log(response.data.results);
             setLoading(false);
             setQuiz(response.data.results);
         } catch (error) {
+            console.log(error);
             setError(true);
             setQuiz([]);
             setLoading(false);
@@ -46,7 +49,7 @@ export default function QuestionsPage() {
             {loading && <p>Loading...</p>}
             {error && <p>Something went wrong!</p>}
             {/* if */}
-            {quiz.map(q => (
+            {quiz && quiz.map(q => (
                 <Col key={q.id} md={4}>
                     <Card>
                         <Card.Header><b>Category:</b> {q.category}</Card.Header>
@@ -59,3 +62,5 @@ export default function QuestionsPage() {
     </>
     )
 }
+
+
