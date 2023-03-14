@@ -83,7 +83,7 @@ class QuestionViewSet(viewsets.ModelViewSet):
         if request.method == 'GET':
             query = Question.objects.filter(Q(text__icontains=search) | Q(answer1__icontains=search) | Q(answer2__icontains=search) | Q(answer3__icontains=search) | Q(answer4__icontains=search) | Q(quiz__category__name__icontains=search) | Q(quiz__name__icontains=search))
             if query.count() == 0:
-                return Response({"error": "No results found"})
+                return Response({"error": "No results found"}, status=204)
             
             return Response(self.serializer_class(query, many=True).data)
     

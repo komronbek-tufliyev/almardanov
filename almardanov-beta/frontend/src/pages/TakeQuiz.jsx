@@ -5,19 +5,35 @@ import { useParams } from "react-router-dom";
 
 
 export default function TakeQuiz() {
-    const [questions, setQuestions] = useState([]);
-    const [answer, setAnswer] = useState([]);
-    const [result, setResult] = useState(0);
-    const [is_result_show, setIs_result_show] = useState(false);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState(false);
-    const [error_message, setError_message] = useState("");
-    const { quiz_id } = useParams();
+    // questions of quiz
+    const [questions, setQuestions] = useState([]); 
+    
+    // answer of question of quiz. #==@ [{question: 1, answer: "Answer text"}, {question: 2, answer: "Answer text 2"}] #==@
+    const [answer, setAnswer] = useState([]); 
+    
+    // result of quiz . #==@ {score: 2, total: 5} @==#
+    const [result, setResult] = useState({}); 
+    
+    // show result modal
+    const [is_result_show, setIs_result_show] = useState(false); 
+    
+    // loading state
+    const [loading, setLoading] = useState(false); 
+    
+    // error state
+    const [error, setError] = useState(false); 
+    
+    // error message to show in modal
+    const [error_message, setError_message] = useState(""); 
+    
+    // get quiz id from url
+    const { quiz_id } = useParams(); 
 
     var answers = [];
 
     const base_url = 'http://127.0.0.1:8000/api/v1';
 
+    // fetch questions from backend
     const fetchQuestions = async () => {
         try {
             setLoading(true);
@@ -34,6 +50,30 @@ export default function TakeQuiz() {
         }
     }
 
+    // send answers to backend
+    const send_answers = async () => {
+        if (answers.length === 0){
+            setError(true);
+            setError_message("Please answer at least one question");
+            return;
+        }else{
+            const response = await axios.post(`${base_url}/takequiz/`, {'answers': answers}).then((response) => {
+                console.log(response);
+                console.log(response.data);
+                setResult(response.data);
+                setIs_result_show(true);
+            }).catch((error) => {
+                console.log(error);
+                setError(true);
+                setError_message("Please answer at least one question");
+                setAnswer([]);
+                setLoading(false);
+            });
+        }
+        clear_answers();
+    }
+
+    // show quiz results
     const show_result = () => {
         console.log("show result");
         return (
@@ -56,7 +96,7 @@ export default function TakeQuiz() {
         )
     }
     
-
+    // show error modal
     const show_error_modal = (error_message) => {
         return (
             <Modal show={true} onHide={handleClose}
@@ -74,6 +114,7 @@ export default function TakeQuiz() {
         )
     }
 
+    // close modal
     const handleClose = () => {
         setError(false);
         // change modal show to false
@@ -81,28 +122,7 @@ export default function TakeQuiz() {
         setError_message("");
     }
 
-    const send_answers = async () => {
-        if (answers.length === 0){
-            setError(true);
-            setError_message("Please answer at least one question");
-            return;
-        }else{
-            const response = await axios.post(`${base_url}/takequiz/`, {'answers': answers}).then((response) => {
-                console.log(response);
-                console.log(response.data);
-                setResult(response.data);
-                setIs_result_show(true);
-            }).catch((error) => {
-                console.log(error);
-                setError(true);
-                setError_message("Please answer at least one question");
-                setAnswer([]);
-                setLoading(false);
-            });
-        }
-    }
-
-
+    // clear all answers. set all radio buttons to unchecked
     const clear_answers = () => {
         answers = [];
         // change all radio buttons to unchecked
@@ -119,10 +139,11 @@ export default function TakeQuiz() {
     }
 
             
-
+    // fetch questions when component mounts
     useEffect(() => {
         fetchQuestions();        
-    }, [quiz_id]);
+    }, [quiz_id]); // eslint-disable-line react-hooks/exhaustive-deps
+
 
 
     return (
@@ -131,7 +152,7 @@ export default function TakeQuiz() {
             {error && show_error_modal(error_message)}
             {result && show_result() }
             <h1 className='text-center my-3 mx-auto'>Take a Quiz</h1>
-            {
+            { questions.length > 0 ?
                 questions.map(q=>(
                     <div key={`wrapper${q.id}`} className='container  my-3 mx-auto'>
                         <h3 key={q.text}>#Savol: {q.text}</h3>
@@ -157,7 +178,7 @@ export default function TakeQuiz() {
                             }}
                             >
                                 {[q.answer1, q.answer2, q.answer3, q.answer4].sort(() => Math.random() - 0.5).map(a => (
-                                    <Form.Check key={a} type="radio" label={a} name="inlineRadioOptions" id={a} value={a} />
+                                    <Form.Check key={a} type="radio" label={a} name="inlineRadioOptions" id={a} value={a} required />
                                 ))}
 
                                 
@@ -165,11 +186,15 @@ export default function TakeQuiz() {
                         </Form>
                     </div>
 
-                ))
+                )) : <><hr /><p>No questions yet</p></>
             }
 
-            <button type='button' onClick={send_answers} className="col-md-6 btn btn-success mx-auto w-50 mr-2">Show Results</button>
-            <button type='button' onClick={clear_answers} className="col-md-6 btn btn-warning mx-auto w-50 ml-2">Clear All </button>
+            {questions.length > 0 && <>
+                    <button type='button' onClick={send_answers} className="col-md-6 btn btn-success mx-auto w-50 mr-2">Show Results</button>
+                    <button type='button' onClick={clear_answers} className="col-md-6 btn btn-warning mx-auto w-50 ml-2">Clear All </button>
+                </>
+            }
+            
                 
                 
         </div>
