@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
-
+import 'package:mobilev2/components/logger.dart';
+import 'package:mobilev2/screens/search_screen.dart';
 
 class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
   const DefaultAppBar({Key? key}) : super(key: key);
@@ -8,22 +8,20 @@ class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: const Text('Default App Bar'),
+      title: const Text('SET YOUR GOALS'),
+      centerTitle: true,
       actions: <Widget>[
         IconButton(
           icon: const Icon(Icons.search),
           onPressed: () {
-            print('Search');
-          },
-        ),
-        IconButton(
-          icon: const Icon(Icons.more_vert),
-          onPressed: () {
-            print('More');
+            showInfo('Search');
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const SearchScreen()),
+            );
           },
         ),
       ],
-      
     );
   }
 
