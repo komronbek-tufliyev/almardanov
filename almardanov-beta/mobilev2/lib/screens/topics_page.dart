@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:mobilev2/components/topic_item.dart';
+import 'package:mobilev2/components/widgets/topic_item.dart';
 
 // get the topics from the server
 
