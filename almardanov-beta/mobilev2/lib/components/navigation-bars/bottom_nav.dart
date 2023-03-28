@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 const bottomNavItems = <BottomNavigationBarItem>[
   BottomNavigationBarItem(
     icon: Icon(
-      Icons.home,
+      Icons.home_outlined,
       color: Color(0xFF4DB6AC),
     ),
     label: 'Home',
@@ -12,11 +12,11 @@ const bottomNavItems = <BottomNavigationBarItem>[
   ),
   BottomNavigationBarItem(
     icon: Icon(
-      Icons.history_outlined,
+      Icons.menu_book_outlined,
       color: Color(0xFF4DB6AC),
     ),
-    label: 'History',
-    tooltip: "History",
+    label: 'Topics',
+    tooltip: "Topics",
     backgroundColor: Color(0xFFFFF59D),
   ),
   BottomNavigationBarItem(
@@ -30,11 +30,11 @@ const bottomNavItems = <BottomNavigationBarItem>[
   ),
   BottomNavigationBarItem(
     icon: Icon(
-      Icons.settings_outlined,
+      Icons.account_circle_outlined,
       color: Color(0xFF4DB6AC),
     ),
-    label: 'Settings',
-    tooltip: "Settings",
+    label: 'Profile',
+    tooltip: "Profile",
     backgroundColor: Color(0xFFFFF59D),
   ),
 ];

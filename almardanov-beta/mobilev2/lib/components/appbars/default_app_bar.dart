@@ -3,7 +3,8 @@ import 'package:mobilev2/components/logger.dart';
 import 'package:mobilev2/screens/search_screen.dart';
 
 class DefaultAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const DefaultAppBar({Key? key}) : super(key: key);
+  final String title;
+  const DefaultAppBar({Key? key, required this.title}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
