@@ -16,7 +16,7 @@ class _QuizzesPageState extends State<QuizzesPage> {
     QuizItemModel(
       title: 'Quiz 1',
       description: 'Quiz 1 description',
-      image: 'assets/images/quiz1.jpg',
+      image: 'assets/images/item.png',
       // author: 'Quiz 1 author',
       // date: 'Quiz 1 date',
       time: 'Quiz 1 time',
@@ -24,7 +24,7 @@ class _QuizzesPageState extends State<QuizzesPage> {
     QuizItemModel(
       title: 'Quiz 1',
       description: 'Quiz 1 description',
-      image: 'assets/images/quiz1.jpg',
+      image: 'assets/images/item.png',
       // author: 'Quiz 1 author',
       // date: 'Quiz 1 date',
       time: 'Quiz 1 time',
@@ -32,7 +32,7 @@ class _QuizzesPageState extends State<QuizzesPage> {
     QuizItemModel(
       title: 'Quiz 1',
       description: 'Quiz 1 description',
-      image: 'assets/images/quiz1.jpg',
+      image: 'assets/images/item.png',
       // author: 'Quiz 1 author',
       // date: 'Quiz 1 date',
       time: 'Quiz 1 time',
@@ -40,7 +40,63 @@ class _QuizzesPageState extends State<QuizzesPage> {
     QuizItemModel(
       title: 'Quiz 1',
       description: 'Quiz 1 description',
-      image: 'assets/images/quiz1.jpg',
+      image: 'assets/images/item.png',
+      // author: 'Quiz 1 author',
+      // date: 'Quiz 1 date',
+      time: 'Quiz 1 time',
+    ),
+    QuizItemModel(
+      title: 'Quiz 1',
+      description: 'Quiz 1 description',
+      image: 'assets/images/item.png',
+      // author: 'Quiz 1 author',
+      // date: 'Quiz 1 date',
+      time: 'Quiz 1 time',
+    ),
+    QuizItemModel(
+      title: 'Quiz 1',
+      description: 'Quiz 1 description',
+      image: 'assets/images/item.png',
+      // author: 'Quiz 1 author',
+      // date: 'Quiz 1 date',
+      time: 'Quiz 1 time',
+    ),
+    QuizItemModel(
+      title: 'Quiz 1',
+      description: 'Quiz 1 description',
+      image: 'assets/images/item.png',
+      // author: 'Quiz 1 author',
+      // date: 'Quiz 1 date',
+      time: 'Quiz 1 time',
+    ),
+    QuizItemModel(
+      title: 'Quiz 1',
+      description: 'Quiz 1 description',
+      image: 'assets/images/item.png',
+      // author: 'Quiz 1 author',
+      // date: 'Quiz 1 date',
+      time: 'Quiz 1 time',
+    ),
+    QuizItemModel(
+      title: 'Quiz 1',
+      description: 'Quiz 1 description',
+      image: 'assets/images/item.png',
+      // author: 'Quiz 1 author',
+      // date: 'Quiz 1 date',
+      time: 'Quiz 1 time',
+    ),
+    QuizItemModel(
+      title: 'Quiz 1',
+      description: 'Quiz 1 description',
+      image: 'assets/images/item.png',
+      // author: 'Quiz 1 author',
+      // date: 'Quiz 1 date',
+      time: 'Quiz 1 time',
+    ),
+    QuizItemModel(
+      title: 'Quiz 1',
+      description: 'Quiz 1 description',
+      image: 'assets/images/item.png',
       // author: 'Quiz 1 author',
       // date: 'Quiz 1 date',
       time: 'Quiz 1 time',
@@ -50,8 +106,8 @@ class _QuizzesPageState extends State<QuizzesPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: DefaultAppBar(title: 'Quizzes'),
-      drawer: DrawerDefault(),
+      appBar: const DefaultAppBar(title: 'Quizzes'),
+      drawer: const DrawerDefault(),
       body: Column(children: [
         Expanded(
           child: ListView.builder(

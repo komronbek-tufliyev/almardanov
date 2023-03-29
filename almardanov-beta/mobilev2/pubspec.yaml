@@ -64,6 +64,7 @@ flutter:
   assets:
     - assets/images/favicon.png
     - assets/images/profile.png
+    - assets/images/item.png
   #   - images/a_dot_ham.jpeg
   
 
