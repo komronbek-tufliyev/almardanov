@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:mobilev2/screens/demo.dart';
 import 'package:mobilev2/screens/home_page.dart';
 import 'package:mobilev2/screens/quizzes_page.dart';
 // import 'package:mobilev2/screens/search_screen.dart';
@@ -30,7 +31,7 @@ class _HomeState extends State<Home> {
       title: 'Salom Alm',
     ),
     const TopicsPage(),
-    const QuizzesPage(),
+    const Demo(),
     // const Text('Topci Page'),
     const ProfilePage(),
   ];

@@ -21,7 +21,7 @@ class BottomNavbar extends StatelessWidget {
   }
 
   List<PersistentBottomNavBarItem> _navsBarItems() {
-    return [
+    return [ 
       PersistentBottomNavBarItem(
         icon: const Icon(Icons.home_outlined),
         title: "Home",

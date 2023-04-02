@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -59,7 +57,7 @@ class DrawerDefault extends StatelessWidget {
               'Settings',
               style: TextStyle(color: Color(0xFF4DB6AC)),
             ),
-            iconColor: Color(0xFF6CD4CA),
+            iconColor: const Color(0xFF6CD4CA),
             onTap: () {
               // exit app
               Navigator.pop(context);
