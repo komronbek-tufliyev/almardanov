@@ -1,34 +1,3 @@
-// import 'dart:convert';
-
-// List<Quiz> postFromJson(String str) =>
-//     List<Quiz>.from(json.decode(str).map((x) => Quiz.fromMap(x)));
-
-// class Quiz {
-//   Quiz({
-//     required this.id,
-//     required this.category,
-//     required this.title,
-//     required this.quizId,
-//   });
-
-//   int id;
-//   String category;
-//   String title;
-//   int quizId;
-
-//   factory Quiz.fromMap(Map<String, dynamic> json) => Quiz(
-//         id: json["id"],
-//         category: json["category"],
-//         title: json["title"],
-//         quizId: json["quiz_id"],
-//       );
-
-// }
-
-// To parse this JSON data, do
-//
-//     final quiz = quizFromJson(jsonString);
-
 import 'dart:convert';
 
 Quiz quizFromJson(String str) => Quiz.fromJson(json.decode(str));
@@ -95,5 +64,13 @@ class Result {
         "questions_count": questionsCount,
       };
 
-  static fromMap(json) {}
+  static Result fromMap(json) {
+    return Result(
+      id: json["id"],
+      name: json["name"],
+      category: json["category"],
+      categoryId: json["category_id"],
+      questionsCount: json["questions_count"],
+    );
+  }
 }

@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:mobilev2/components/appbars/default_app_bar.dart';
 import 'package:mobilev2/components/drawer_default.dart';
 import 'package:mobilev2/components/widgets/quiz_item.dart';
-
-
-
+import 'package:mobilev2/models/quiz_model.dart';
 
 class QuizzesPage extends StatefulWidget {
   const QuizzesPage({Key? key}) : super(key: key);
@@ -14,113 +12,44 @@ class QuizzesPage extends StatefulWidget {
 }
 
 class _QuizzesPageState extends State<QuizzesPage> {
-  // list of quizzes
-  List quizzes = [
-    // QuizItemModel(
-    //   title: 'Quiz 1',
-    //   description: 'Quiz 1 description',
-    //   image: 'assets/images/item.png',
-    //   // author: 'Quiz 1 author',
-    //   // date: 'Quiz 1 date',
-    //   time: 'Quiz 1 time',
-    // ),
-    // QuizItemModel(
-    //   title: 'Quiz 1',
-    //   description: 'Quiz 1 description',
-    //   image: 'assets/images/item.png',
-    //   // author: 'Quiz 1 author',
-    //   // date: 'Quiz 1 date',
-    //   time: 'Quiz 1 time',
-    // ),
-    // QuizItemModel(
-    //   title: 'Quiz 1',
-    //   description: 'Quiz 1 description',
-    //   image: 'assets/images/item.png',
-    //   // author: 'Quiz 1 author',
-    //   // date: 'Quiz 1 date',
-    //   time: 'Quiz 1 time',
-    // ),
-    // QuizItemModel(
-    //   title: 'Quiz 1',
-    //   description: 'Quiz 1 description',
-    //   image: 'assets/images/item.png',
-    //   // author: 'Quiz 1 author',
-    //   // date: 'Quiz 1 date',
-    //   time: 'Quiz 1 time',
-    // ),
-    // QuizItemModel(
-    //   title: 'Quiz 1',
-    //   description: 'Quiz 1 description',
-    //   image: 'assets/images/item.png',
-    //   // author: 'Quiz 1 author',
-    //   // date: 'Quiz 1 date',
-    //   time: 'Quiz 1 time',
-    // ),
-    // QuizItemModel(
-    //   title: 'Quiz 1',
-    //   description: 'Quiz 1 description',
-    //   image: 'assets/images/item.png',
-    //   // author: 'Quiz 1 author',
-    //   // date: 'Quiz 1 date',
-    //   time: 'Quiz 1 time',
-    // ),
-    // QuizItemModel(
-    //   title: 'Quiz 1',
-    //   description: 'Quiz 1 description',
-    //   image: 'assets/images/item.png',
-    //   // author: 'Quiz 1 author',
-    //   // date: 'Quiz 1 date',
-    //   time: 'Quiz 1 time',
-    // ),
-    // QuizItemModel(
-    //   title: 'Quiz 1',
-    //   description: 'Quiz 1 description',
-    //   image: 'assets/images/item.png',
-    //   // author: 'Quiz 1 author',
-    //   // date: 'Quiz 1 date',
-    //   time: 'Quiz 1 time',
-    // ),
-    // QuizItemModel(
-    //   title: 'Quiz 1',
-    //   description: 'Quiz 1 description',
-    //   image: 'assets/images/item.png',
-    //   // author: 'Quiz 1 author',
-    //   // date: 'Quiz 1 date',
-    //   time: 'Quiz 1 time',
-    // ),
-    // QuizItemModel(
-    //   title: 'Quiz 1',
-    //   description: 'Quiz 1 description',
-    //   image: 'assets/images/item.png',
-    //   // author: 'Quiz 1 author',
-    //   // date: 'Quiz 1 date',
-    //   time: 'Quiz 1 time',
-    // ),
-    // QuizItemModel(
-    //   title: 'Quiz 1',
-    //   description: 'Quiz 1 description',
-    //   image: 'assets/images/item.png',
-    //   // author: 'Quiz 1 author',
-    //   // date: 'Quiz 1 date',
-    //   time: 'Quiz 1 time',
-    // ),
-  ];
+  @override
+  void initState() {
+    super.initState();
+    QuizItemAPIService service = QuizItemAPIService();
+    Quiz quiz;
+    service.getQuizzes().then((value) {
+      setState(() {
+        quiz = value;
+        print('Quizzes response from initState: ${quiz.toJson()}');
+      });
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: const DefaultAppBar(title: 'Quizzes'),
       drawer: const DrawerDefault(),
-      body: Column(children: [
-        Expanded(
-          child: ListView.builder(
-            itemCount: quizzes.length,
-            itemBuilder: (context, index) {
-              return const QuizItem();
-            },
-          ),
-        ),
-      ]),
+      body: FutureBuilder(
+        future: QuizItemAPIService().getQuizzes(),
+        builder: (context, AsyncSnapshot<Quiz> snapshot) {
+          print('Quizzes response from build: ${snapshot}');
+          if (snapshot.hasData) {
+            print(snapshot);
+            print(snapshot.data);
+            return ListView.builder(
+              shrinkWrap: true,
+              itemCount: snapshot.data!.results.length,
+              itemBuilder: (context, index) {
+                return ResultTile(result: snapshot.data!.results[index]);
+              },
+            );
+          } else if (snapshot.hasError) {
+            return Text('${snapshot.error}');
+          }
+          return const Center(child: CircularProgressIndicator());
+        },
+      ),
     );
   }
 }

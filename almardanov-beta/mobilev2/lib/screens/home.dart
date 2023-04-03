@@ -31,7 +31,8 @@ class _HomeState extends State<Home> {
       title: 'Salom Alm',
     ),
     const TopicsPage(),
-    const Demo(),
+    const QuizzesPage(),
+    // const Demo(),
     // const Text('Topci Page'),
     const ProfilePage(),
   ];
