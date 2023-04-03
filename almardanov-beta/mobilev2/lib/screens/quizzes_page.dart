@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:mobilev2/components/appbars/default_app_bar.dart';
 import 'package:mobilev2/components/drawer_default.dart';
@@ -12,16 +14,27 @@ class QuizzesPage extends StatefulWidget {
 }
 
 class _QuizzesPageState extends State<QuizzesPage> {
+  QuizItemAPIService service = QuizItemAPIService();
+  Future<Quiz>? _future;
+
   @override
   void initState() {
     super.initState();
     QuizItemAPIService service = QuizItemAPIService();
-    Quiz quiz;
-    service.getQuizzes().then((value) {
-      setState(() {
-        quiz = value;
-        print('Quizzes response from initState: ${quiz.toJson()}');
-      });
+
+    Timer.periodic(const Duration(seconds: 5), (Timer t) {
+      if (!mounted) {
+        t.cancel();
+      } else {
+        // _future = service.getQuizzes().then((value) {
+        setState(() {
+          _future = service.getQuizzes();
+        });
+        // });
+        // setState(() {});
+        // service.getQuizzes().then((value) {
+        // });
+      }
     });
   }
 
@@ -30,25 +43,24 @@ class _QuizzesPageState extends State<QuizzesPage> {
     return Scaffold(
       appBar: const DefaultAppBar(title: 'Quizzes'),
       drawer: const DrawerDefault(),
-      body: FutureBuilder(
-        future: QuizItemAPIService().getQuizzes(),
-        builder: (context, AsyncSnapshot<Quiz> snapshot) {
-          print('Quizzes response from build: ${snapshot}');
-          if (snapshot.hasData) {
-            print(snapshot);
-            print(snapshot.data);
-            return ListView.builder(
-              shrinkWrap: true,
-              itemCount: snapshot.data!.results.length,
-              itemBuilder: (context, index) {
-                return ResultTile(result: snapshot.data!.results[index]);
-              },
-            );
-          } else if (snapshot.hasError) {
-            return Text('${snapshot.error}');
-          }
-          return const Center(child: CircularProgressIndicator());
-        },
+      body: SafeArea(
+        child: FutureBuilder(
+          future: _future,
+          builder: (context, AsyncSnapshot<Quiz> snapshot) {
+            if (snapshot.hasData) {
+              return ListView.builder(
+                shrinkWrap: true,
+                itemCount: snapshot.data!.results.length,
+                itemBuilder: (context, index) {
+                  return ResultTile(result: snapshot.data!.results[index]);
+                },
+              );
+            } else if (snapshot.hasError) {
+              return Text('${snapshot.error}');
+            }
+            return const Center(child: CircularProgressIndicator());
+          },
+        ),
       ),
     );
   }

@@ -8,7 +8,7 @@ class Demo extends StatelessWidget {
     var response =
         // await Dio().get('http://192.168.43.175:8000/api/v1/quizzes/'); // for home computer
         await Dio().get(
-            'http://172.16.13.98:8000/api/v1/quizzes/'); // for work computer
+            'https://almardanov.herokuapp.com/api/v1/quizzes/'); // for work computer
     print(response);
   }
 
