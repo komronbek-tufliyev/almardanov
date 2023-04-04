@@ -1,28 +1,29 @@
-import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
-import 'package:mobilev2/components/logger.dart';
-import 'package:mobilev2/models/quiz_model.dart';
+import 'package:flutter/material.dart';
+import 'package:mobilev2/models/topic_model.dart';
 
-class QuizItemAPIService {
-  final String _url = 'https://almardanov.herokuapp.com/api/v1/quizzes/';
+import '../logger.dart';
+
+class TopicItemAPIService {
+  final String _url = 'https://almardanov.herokuapp.com/api/v1/topics/';
   late Dio _dio;
 
-  QuizItemAPIService() {
+  TopicItemAPIService() {
     _dio = Dio(BaseOptions(
-      baseUrl: 'https://almardanov.herokuapp.com/api/v1/quizzes/',
+      baseUrl: 'https://almardanov.herokuapp.com/api/v1/topics/',
       connectTimeout: const Duration(seconds: 5),
       receiveTimeout: const Duration(seconds: 5),
     ));
   }
 
-  Future<Quiz> getQuizzes() async {
+  Future<Topic> getTopics() async {
     try {
       Response response =
-          await _dio.get('https://almardanov.herokuapp.com/api/v1/quizzes/');
+          await _dio.get('https://almardanov.herokuapp.com/api/v1/topics/');
       if (response.statusCode == 200) {
-        Quiz quizItemResponse = Quiz.fromJson(response.data);
-        Quiz quizzes = quizItemResponse;
-        return quizzes;
+        Topic topicItemResponse = Topic.fromJson(response.data);
+        Topic topics = topicItemResponse;
+        return topics;
       } else {
         print('Error: ${response.statusCode}');
         throw Exception('Error: ${response.statusCode}');
@@ -34,29 +35,19 @@ class QuizItemAPIService {
   }
 }
 
-class QuizItem extends StatelessWidget {
-  final Quiz quizItem;
-  const QuizItem({
-    Key? key,
-    required this.quizItem,
-  }) : super(key: key);
+class TopicItem extends StatelessWidget {
+  const TopicItem({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.blue,
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: const Text('salom'),
-    );
+    return Container();
   }
 }
 
-class ResultTile extends StatelessWidget {
+
+class TopicResultTile extends StatelessWidget {
   final Result result;
-  const ResultTile({
+  const TopicResultTile({
     Key? key,
     required this.result,
   }) : super(key: key);
@@ -106,9 +97,9 @@ class ResultTile extends StatelessWidget {
                   children: [
                     Text(
                       // if result.name length is more than 20, then show only first 20 characters
-                      result.name.length > 30
-                          ? '${result.name.substring(0, 30)}...'
-                          : result.name,
+                      result.title.length > 30
+                          ? '${result.title.substring(0, 30)}...'
+                          : result.title,
                       style: const TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.w500,
