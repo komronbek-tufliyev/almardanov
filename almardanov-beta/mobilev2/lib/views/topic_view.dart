@@ -1,15 +1,15 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mobilev2/models/question_model.dart';
+import 'package:mobilev2/models/topic_item_model.dart';
 
-class QuizViewAPIService {
-  late int quizId;
+class TopicItemAPIService {
+  late int topicId;
   late final String _url =
-      'https://almardanov.herokuapp.com/api/v1/quizzes/$quizId';
+      'https://almardanov.herokuapp.com/api/v1/topics/$topicId';
   late Dio _dio;
 
-  QuizViewAPIService({required this.quizId}) {
+  TopicItemAPIService({required this.topicId}) {
     _dio = Dio(BaseOptions(
       baseUrl: _url,
       connectTimeout: const Duration(seconds: 5),
@@ -17,13 +17,12 @@ class QuizViewAPIService {
     ));
   }
 
-  Future<List<QuestionModel>> getQuestions() async {
+  Future<TopicItemModel> getTopic() async {
     try {
       Response response = await _dio.get(_url);
       if (response.statusCode == 200) {
-        List<QuestionModel> questions = List<QuestionModel>.from(
-            response.data.map((x) => QuestionModel.fromJson(x)));
-        return questions;
+        TopicItemModel topic = TopicItemModel.fromJson(response.data);
+        return topic;
       } else {
         if (kDebugMode) {
           print('Error: ${response.statusCode}');
@@ -39,32 +38,25 @@ class QuizViewAPIService {
   }
 }
 
-class QuizView extends StatelessWidget {
-  const QuizView({Key? key, required this.quizId}) : super(key: key);
-  final int quizId;
+class TopicItemView extends StatelessWidget {
+  const TopicItemView({Key? key, required this.topicId}) : super(key: key);
+  final int topicId;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('QuizView: $quizId'),
+        title: Text('QuizView: $topicId'),
         centerTitle: true,
       ),
       body: FutureBuilder(
-        future: QuizViewAPIService(quizId: quizId).getQuestions(),
-        builder: (BuildContext context,
-            AsyncSnapshot<List<QuestionModel>> snapshot) {
+        future: TopicItemAPIService(topicId: topicId).getTopic(),
+        builder:
+            (BuildContext context, AsyncSnapshot<TopicItemModel> snapshot) {
           if (snapshot.hasData) {
-            return ListView.builder(
-              itemCount: snapshot.data!.length,
-              itemBuilder: (BuildContext context, int index) {
-                return QuestionTile(question: snapshot.data![index]);
-              },
-            );
+            return TopicTile(topic: snapshot.data!);
           } else {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
+            return const Center(child: CircularProgressIndicator());
           }
         },
       ),
@@ -72,11 +64,11 @@ class QuizView extends StatelessWidget {
   }
 }
 
-class QuestionTile extends StatelessWidget {
-  final QuestionModel question;
-  const QuestionTile({
+class TopicTile extends StatelessWidget {
+  final TopicItemModel topic;
+  const TopicTile({
     Key? key,
-    required this.question,
+    required this.topic,
   }) : super(key: key);
 
   @override
@@ -96,19 +88,17 @@ class QuestionTile extends StatelessWidget {
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                '${question.id.toString()}.',
+                '${topic.id.toString()}.',
                 style:
                     const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
               const SizedBox(width: 5),
               Text(
-                question.text,
+                topic.title,
                 style: const TextStyle(
                   fontSize: 16,
                   fontWeight: FontWeight.w500,
@@ -117,13 +107,14 @@ class QuestionTile extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 10),
-          Text(question.answer1),
+          Row(
+            children: [
+              Text(topic.author),
+              const SizedBox(width: 5),
+              Text(topic.category),
+            ],
+          ),
           const SizedBox(height: 10),
-          Text(question.answer2),
-          const SizedBox(height: 10),
-          Text(question.answer3),
-          const SizedBox(height: 10),
-          Text(question.answer4),
         ],
       ),
     );

@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:mobilev2/components/appbars/default_app_bar.dart';
+import 'package:mobilev2/components/appbars/search_bar.dart';
 import 'package:mobilev2/components/drawer_default.dart';
 import 'package:mobilev2/components/widgets/quiz_item.dart';
 import 'package:mobilev2/models/quiz_model.dart';
@@ -43,23 +44,31 @@ class _QuizzesPageState extends State<QuizzesPage> {
     return Scaffold(
       appBar: const DefaultAppBar(title: 'Quizzes'),
       drawer: const DrawerDefault(),
-      body: SafeArea(
-        child: FutureBuilder(
-          future: _future,
-          builder: (context, AsyncSnapshot<Quiz> snapshot) {
-            if (snapshot.hasData) {
-              return ListView.builder(
-                shrinkWrap: true,
-                itemCount: snapshot.data!.results.length,
-                itemBuilder: (context, index) {
-                  return ResultTile(result: snapshot.data!.results[index]);
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            const SearchBar(),
+            const SizedBox(height: 10),
+            SafeArea(
+              child: FutureBuilder(
+                future: _future,
+                builder: (context, AsyncSnapshot<Quiz> snapshot) {
+                  if (snapshot.hasData) {
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: snapshot.data!.results.length,
+                      itemBuilder: (context, index) {
+                        return ResultTile(result: snapshot.data!.results[index]);
+                      },
+                    );
+                  } else if (snapshot.hasError) {
+                    return Text('${snapshot.error}');
+                  }
+                  return const Center(child: CircularProgressIndicator());
                 },
-              );
-            } else if (snapshot.hasError) {
-              return Text('${snapshot.error}');
-            }
-            return const Center(child: CircularProgressIndicator());
-          },
+              ),
+            ),
+          ],
         ),
       ),
     );

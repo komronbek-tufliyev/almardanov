@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:mobilev2/components/logger.dart';
 import 'package:mobilev2/models/quiz_model.dart';
+import 'package:mobilev2/views/quiz_view.dart';
 
 class QuizItemAPIService {
   final String _url = 'https://almardanov.herokuapp.com/api/v1/quizzes/';
@@ -143,6 +144,14 @@ class ResultTile extends StatelessWidget {
                         onPressed: () {
                           showInfo(
                             'This is a quiz',
+                          );
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => QuizView(
+                                quizId: result.id,
+                              ),
+                            ),
                           );
                         },
                         icon: const Icon(

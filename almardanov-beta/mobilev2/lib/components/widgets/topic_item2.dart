@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:mobilev2/components/widgets/quiz_item.dart';
 import 'package:mobilev2/models/topic_model.dart';
+import 'package:mobilev2/views/topic_view.dart';
 
 import '../logger.dart';
 
@@ -43,7 +45,6 @@ class TopicItem extends StatelessWidget {
     return Container();
   }
 }
-
 
 class TopicResultTile extends StatelessWidget {
   final Result result;
@@ -136,10 +137,23 @@ class TopicResultTile extends StatelessWidget {
                             'This is a quiz',
                           );
                         },
-                        icon: const Icon(
-                          Icons.chevron_right_rounded,
-                          size: 25,
-                          color: Colors.blue,
+                        icon: IconButton(
+                          icon: const Icon(
+                            Icons.chevron_right_rounded,
+                            size: 25,
+                            color: Colors.blue,
+                          ),
+                          onPressed: () {
+                            showInfo(
+                              'This is a quiz',
+                            );
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => TopicItemView(topicId: result.id),
+                              ),
+                            );
+                          },
                         ),
                       ),
                     ),
