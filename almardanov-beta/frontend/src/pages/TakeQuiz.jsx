@@ -31,7 +31,8 @@ export default function TakeQuiz() {
 
     var answers = [];
 
-    const base_url = 'http://127.0.0.1:8000/api/v1';
+    // const base_url = 'http://127.0.0.1:8000/api/v1';
+    const base_url = 'http://almardanov.herokuapp.com/api/v1';
 
     // fetch questions from backend
     const fetchQuestions = async () => {
@@ -70,7 +71,7 @@ export default function TakeQuiz() {
                 setLoading(false);
             });
         }
-        clear_answers();
+        // clear_answers();
     }
 
     // show quiz results
@@ -155,7 +156,7 @@ export default function TakeQuiz() {
             { questions.length > 0 ?
                 questions.map(q=>(
                     <div key={`wrapper${q.id}`} className='container  my-3 mx-auto'>
-                        <h3 key={q.text}>#Savol: {q.text}</h3>
+                        <h3 key={q.text}>{q.id}. {q.text}</h3>
                         <Form key="">
                             <Form.Group aria-required key="form-group" className="mb-3" controlId="formBasicCheckbox" 
                             onChange={(e) => {
@@ -175,13 +176,10 @@ export default function TakeQuiz() {
                                     answers.push({question: q.text, answer: e.target.value});
                                     console.log('Does not exist');
                                 }
-                            }}
-                            >
+                            }}>
                                 {[q.answer1, q.answer2, q.answer3, q.answer4].sort(() => Math.random() - 0.5).map(a => (
                                     <Form.Check key={a} type="radio" label={a} name="inlineRadioOptions" id={a} value={a} required />
                                 ))}
-
-                                
                             </Form.Group>
                         </Form>
                     </div>
@@ -189,10 +187,10 @@ export default function TakeQuiz() {
                 )) : <><hr /><p>No questions yet</p></>
             }
 
-            {questions.length > 0 && <>
-                    <button type='button' onClick={send_answers} className="col-md-6 btn btn-success mx-auto w-50 mr-2">Show Results</button>
-                    <button type='button' onClick={clear_answers} className="col-md-6 btn btn-warning mx-auto w-50 ml-2">Clear All </button>
-                </>
+            {questions.length > 0 && <div className='d-flex justify-content-between'>
+                    <button type='button' onClick={send_answers} className="btn btn-success " style={{width: 'calc(50% - 10px)'}}>Show Results</button>
+                    <button type='button' onClick={clear_answers} className="btn btn-warning " style={{width: 'calc(50% - 10px)'}}>Clear All </button>
+                </div>
             }
             
                 

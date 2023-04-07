@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:mobilev2/components/widgets/quiz_item.dart';
 import 'package:mobilev2/models/topic_model.dart';
 import 'package:mobilev2/views/topic_view.dart';
 
@@ -12,7 +12,7 @@ class TopicItemAPIService {
 
   TopicItemAPIService() {
     _dio = Dio(BaseOptions(
-      baseUrl: 'https://almardanov.herokuapp.com/api/v1/topics/',
+      baseUrl: _url,
       connectTimeout: const Duration(seconds: 5),
       receiveTimeout: const Duration(seconds: 5),
     ));
@@ -20,18 +20,21 @@ class TopicItemAPIService {
 
   Future<Topic> getTopics() async {
     try {
-      Response response =
-          await _dio.get('https://almardanov.herokuapp.com/api/v1/topics/');
+      Response response = await _dio.get(_url);
       if (response.statusCode == 200) {
         Topic topicItemResponse = Topic.fromJson(response.data);
         Topic topics = topicItemResponse;
         return topics;
       } else {
-        print('Error: ${response.statusCode}');
+        if (kDebugMode) {
+          print('Error: ${response.statusCode}');
+        }
         throw Exception('Error: ${response.statusCode}');
       }
     } on DioError catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       throw Exception(e);
     }
   }
@@ -96,28 +99,32 @@ class TopicResultTile extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   // mainAxisAlignment: MainAxisAlignment.values[0],
                   children: [
-                    Text(
-                      // if result.name length is more than 20, then show only first 20 characters
-                      result.title.length > 30
-                          ? '${result.title.substring(0, 30)}...'
-                          : result.title,
-                      style: const TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.w500,
+                    Flexible(
+                      child: Text(
+                        // if result.name length is more than 20, then show only first 20 characters
+                        result.title.length > 30
+                            ? '${result.title.substring(0, 30)}...'
+                            : result.title,
+                        style: const TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.w500,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 5),
                     // const SizedBox(height: 5),
-                    Text(
-                      // result.category ,
-                      // if result.category length is more than 20, then show only first 20 characters
-                      result.category.length > 40
-                          ? '${result.category.substring(0, 40)}...'
-                          : result.category,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.grey,
-                        fontWeight: FontWeight.normal,
+                    Flexible(
+                      child: Text(
+                        // result.category ,
+                        // if result.category length is more than 20, then show only first 20 characters
+                        result.category.length > 40
+                            ? '${result.category.substring(0, 40)}...'
+                            : result.category,
+                        style: const TextStyle(
+                          fontSize: 14,
+                          color: Colors.grey,
+                          fontWeight: FontWeight.normal,
+                        ),
                       ),
                     ),
                     const SizedBox(height: 5),
@@ -150,7 +157,8 @@ class TopicResultTile extends StatelessWidget {
                             Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => TopicItemView(topicId: result.id),
+                                builder: (context) =>
+                                    TopicItemView(topicId: result.id),
                               ),
                             );
                           },

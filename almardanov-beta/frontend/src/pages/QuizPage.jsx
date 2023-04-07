@@ -14,7 +14,8 @@ export default function QuizPage(){
     const [error, setError] = useState(false);
     const [page, setPage] = useState(1);
 
-    const base_url = 'http://127.0.0.1:8000/api/v1';
+    // const base_url = 'http://127.0.0.1:8000/api/v1';
+    const base_url = 'http://almardanov.herokuapp.com/api/v1';
 
     const fetchQuiz = async () => {
         try {

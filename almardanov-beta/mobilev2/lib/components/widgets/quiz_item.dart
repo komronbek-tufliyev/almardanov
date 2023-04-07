@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:dio/dio.dart';
 import 'package:mobilev2/components/logger.dart';
@@ -10,7 +11,7 @@ class QuizItemAPIService {
 
   QuizItemAPIService() {
     _dio = Dio(BaseOptions(
-      baseUrl: 'https://almardanov.herokuapp.com/api/v1/quizzes/',
+      baseUrl: _url,
       connectTimeout: const Duration(seconds: 5),
       receiveTimeout: const Duration(seconds: 5),
     ));
@@ -18,18 +19,21 @@ class QuizItemAPIService {
 
   Future<Quiz> getQuizzes() async {
     try {
-      Response response =
-          await _dio.get('https://almardanov.herokuapp.com/api/v1/quizzes/');
+      Response response = await _dio.get(_url);
       if (response.statusCode == 200) {
         Quiz quizItemResponse = Quiz.fromJson(response.data);
         Quiz quizzes = quizItemResponse;
         return quizzes;
       } else {
-        print('Error: ${response.statusCode}');
+        if (kDebugMode) {
+          print('Error: ${response.statusCode}');
+        }
         throw Exception('Error: ${response.statusCode}');
       }
     } on DioError catch (e) {
-      print(e);
+      if (kDebugMode) {
+        print(e);
+      }
       throw Exception(e);
     }
   }

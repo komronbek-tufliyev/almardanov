@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 class Demo extends StatelessWidget {
@@ -9,7 +10,9 @@ class Demo extends StatelessWidget {
         // await Dio().get('http://192.168.43.175:8000/api/v1/quizzes/'); // for home computer
         await Dio().get(
             'https://almardanov.herokuapp.com/api/v1/quizzes/'); // for work computer
-    print(response);
+    if (kDebugMode) {
+      print(response);
+    }
   }
 
   @override

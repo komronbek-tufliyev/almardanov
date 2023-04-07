@@ -46,7 +46,7 @@ class TopicItemView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('QuizView: $topicId'),
+        title: Text('Topic: $topicId'),
         centerTitle: true,
       ),
       body: FutureBuilder(
@@ -74,21 +74,22 @@ class TopicTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.all(10),
+      // margin: const EdgeInsets.all(10),
       padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black12,
-            blurRadius: 10,
-            offset: Offset(0, 10),
-          ),
-        ],
-      ),
+      //   decoration: BoxDecoration(
+      //     color: Colors.white,
+      //     borderRadius: BorderRadius.circular(10),
+      //     boxShadow: const [
+      //       BoxShadow(
+      //         color: Colors.black12,
+      //         blurRadius: 10,
+      //         offset: Offset(0, 10),
+      //       ),
+      //     ],
+      //   ),
       child: Column(
         children: [
+          // Image(image: NetworkImage(topic.image)),
           Row(
             children: [
               Text(
@@ -97,11 +98,13 @@ class TopicTile extends StatelessWidget {
                     const TextStyle(fontSize: 16, fontWeight: FontWeight.w500),
               ),
               const SizedBox(width: 5),
-              Text(
-                topic.title,
-                style: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.w500,
+              Flexible(
+                child: Text(
+                  topic.title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
               ),
             ],

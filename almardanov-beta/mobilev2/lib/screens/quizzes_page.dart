@@ -56,6 +56,8 @@ class _QuizzesPageState extends State<QuizzesPage> {
                   if (snapshot.hasData) {
                     return ListView.builder(
                       shrinkWrap: true,
+                      // physics: const NeverScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
                       itemCount: snapshot.data!.results.length,
                       itemBuilder: (context, index) {
                         return ResultTile(result: snapshot.data!.results[index]);
