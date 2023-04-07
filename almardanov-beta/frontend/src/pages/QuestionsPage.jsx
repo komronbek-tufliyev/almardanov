@@ -13,7 +13,7 @@ export default function QuestionsPage() {
     const [page, setPage] = useState(1);
 
     // const base_url = 'http://127.0.0.1:8000/api/v1/quizzes/';
-    const base_url = 'http://almardanov.herokuapp.com/api/v1/quizzes/';
+    const base_url = 'https://almardanov.herokuapp.com/api/v1/quizzes/';
 
     console.log("QuestionsPage");
     const fetchQuiz = async () => {

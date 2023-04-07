@@ -32,7 +32,7 @@ export default function TakeQuiz() {
     var answers = [];
 
     // const base_url = 'http://127.0.0.1:8000/api/v1';
-    const base_url = 'http://almardanov.herokuapp.com/api/v1';
+    const base_url = 'https://almardanov.herokuapp.com/api/v1';
 
     // fetch questions from backend
     const fetchQuestions = async () => {
